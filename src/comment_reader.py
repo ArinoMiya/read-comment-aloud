@@ -10,11 +10,11 @@ URL_BASE = "https://www.googleapis.com/youtube/v3/"
 
 
 class CommentReader:
-    def __init__(self, jp=False, chat_id=None):
+    def __init__(self, volume=0.5, jp=False, chat_id=None):
         self.http = authorize()
         self.chat_id = chat_id
         self.page_token = None
-        self.speaker = speaker.Speaker(jp=jp)
+        self.speaker = speaker.Speaker(volume=volume, jp=jp)
 
     def setup_from_channel_id(self, channel_id):
         video_id = self._search_video_id_on_air(channel_id)

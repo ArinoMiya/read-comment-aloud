@@ -23,6 +23,11 @@ def parse_args():
                         action='store_true',
                         help="Japanese voices only"
                         )
+    parser.add_argument('-v', '--volume',
+                        type=float,
+                        default=0.5,
+                        help="voice volume"
+                        )
 
     args = parser.parse_args()
     return args
@@ -30,7 +35,7 @@ def parse_args():
 
 if __name__ == '__main__':
     arg = parse_args()
-    reader = comment_reader.CommentReader()
+    reader = comment_reader.CommentReader(volume=arg.volume, jp=arg.jp)
     if arg.method == 'channel':
         reader.setup_from_channel_id(arg.id)
     elif arg.method == 'video':

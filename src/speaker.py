@@ -10,7 +10,7 @@ import src.romaji as romaji
 
 
 class Speaker:
-    def __init__(self, jp=False):
+    def __init__(self, volume=0.5, jp=False):
         self.client = texttospeech.TextToSpeechClient()
         self.VOICE_LIST = self.client.list_voices().voices
         if jp:
@@ -18,6 +18,7 @@ class Speaker:
 
         self.NUM_VOICE = len(self.VOICE_LIST)
         self.VOICE_PATH = "./tmp/"
+        self.volume = volume
         os.makedirs(self.VOICE_PATH, exist_ok=True)
         pygame.mixer.init()
 
@@ -41,6 +42,7 @@ class Speaker:
         path = self.VOICE_PATH + f'tmp_{name}_{delay}.wav'
         self.make_wav(path, text=text, author_id=author_id, delay=delay)
         sound = pygame.mixer.Sound(path)
+        sound.set_volume(self.volume)
         sound.play()
         os.remove(path)
 
