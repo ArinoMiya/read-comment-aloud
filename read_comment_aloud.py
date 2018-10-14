@@ -25,7 +25,7 @@ def parse_args():
                         )
     parser.add_argument('-v', '--volume',
                         type=float,
-                        default=0.5,
+                        default=0.7,
                         help="voice volume"
                         )
 

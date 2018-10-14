@@ -1,13 +1,13 @@
 # coding: utf-8
-from src.urlopen import urlopen
 from xml.etree.ElementTree import fromstring
+from . import urlopen
 
 
 def convert(text):
     url = "http://www.kawa.net/works/ajax/romanize/romanize.cgi?mode=japanese&ie=UTF-8&q="
     url += ''.join(text.split())
 
-    req = urlopen(url, timeout=10)
+    req = urlopen.urlopen(url, timeout=10)
     html = req.read()
 
     elem = fromstring(html)

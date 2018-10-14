@@ -6,15 +6,16 @@ from concurrent import futures
 import pygame
 from google.cloud import texttospeech
 
-import src.romaji as romaji
+from . import romaji
 
 
 class Speaker:
     def __init__(self, volume=0.5, jp=False):
         self.client = texttospeech.TextToSpeechClient()
         self.VOICE_LIST = self.client.list_voices().voices
+        self.jp = jp
         if jp:
-            self.VOICE_LIST = [self.VOICE_LIST[2], self.VOICE_LIST[31]]
+            self.VOICE_LIST = [voice for voice in self.VOICE_LIST if voice.language_codes[0] == 'ja-JP']
 
         self.NUM_VOICE = len(self.VOICE_LIST)
         self.VOICE_PATH = "./tmp/"
@@ -51,6 +52,13 @@ class Speaker:
 
         voice_id = author_id % self.NUM_VOICE
         voice = self.VOICE_LIST[voice_id]
+
+
+        if not self.jp:
+            # exclude Japanese speaker
+            while(voice.language_codes[0] == 'ja-JP'):
+                voice_id = (voice_id + 1) % self.NUM_VOICE
+                voice = self.VOICE_LIST[voice_id]
 
         language_code = voice.language_codes[0]
         name = voice.name
@@ -108,16 +116,19 @@ if __name__ == "__main__":
     # ja-JP id: 2, 31
     speaker = Speaker()
 
+    print(speaker.VOICE_LIST)
+
     _comment_list = list()
     _comment_list.append({'published_time': 'yymmddhhmmss',
                           'name': '有野',
-                          'text': copipe,
-                          'author_id': 3,
+                          'text': test_text,
+                          'author_id': 2,
                           'delay': 1.})
+
     _comment_list.append({'published_time': 'yymmddhhmmss',
                           'name': '有野',
                           'text': test_text,
-                          'author_id': 3,
+                          'author_id': 31,
                           'delay': 0.})
     speaker.read_comment_list(_comment_list)
     print("read")
